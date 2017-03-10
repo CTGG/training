@@ -19,7 +19,7 @@ public interface LoginService {
      *
      * @param name
      * @param password
-     * @return int      
+     * @return int
      */
     public int registerMember(String name, String password);
 
