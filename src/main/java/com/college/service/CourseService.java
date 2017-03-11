@@ -56,11 +56,11 @@ public interface CourseService {
      * 增加一个开班申请，默认未批准，检查是否开始日期大于等于今天且结束>开始
      * @param course
      */
-    public void applyAddCourse(Course course);
+    public ResultMessage applyAddCourse(Course course);
 
 
     /**
-     * 如果已经开班了，则不允许修改信息
+     * 如果已经开班了，则不允许修改信息，修改后通知总经理审核
      * 否则更新课程信息
      * @param course
      * @return
@@ -68,12 +68,6 @@ public interface CourseService {
     public ResultMessage modifyInfo(Course course);
 
 
-    /**
-     *
-     * @param courseid
-     * @param studentid
-     * @param score
-     */
-    public void scoreRegister(int courseid, int studentid, int score);
+
 
 }

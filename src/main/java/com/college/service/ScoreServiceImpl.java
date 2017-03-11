@@ -17,17 +17,28 @@ public class ScoreServiceImpl implements ScoreService {
         Score score = new Score();
         score.setStudentid(id);
         score.setCourseid(courseid);
-        scoreRepo.save(score);
+        save(score);
     }
 
     @Override
     public void deleteCourseItem(int id, int courseid) {
-
-
-        scoreRepo.findByCompositeId(id, courseid);
+        //TODO
+        Score score = scoreRepo.findByCompositeId(id, courseid);
+        scoreRepo.delete(score);
     }
 
 
+    @Override
+    public void scoreRegister(int courseid, int studentid, int score) {
+        Score item = new Score();
+        item.setCourseid(courseid);
+        item.setStudentid(studentid);
+        item.setScore(score);
+        save(item);
+    }
 
+    private Score save(Score score){
+        return scoreRepo.save(score);
+    }
 
 }

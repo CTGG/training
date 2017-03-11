@@ -22,4 +22,13 @@ public interface ScoreService {
      */
     public void deleteCourseItem(int id, int courseid);
 
+
+    /**
+     * 登记分数
+     * @param courseid
+     * @param studentid
+     * @param score
+     */
+    public void scoreRegister(int courseid, int studentid, int score);
+
 }
