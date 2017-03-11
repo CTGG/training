@@ -1,10 +1,12 @@
 package com.college.service;
 
 import com.college.domain.Card;
+import org.springframework.stereotype.Component;
 
 /**
  * Created by G on 2017/3/11.
  */
+@Component
 public interface CardService {
     /**
      * 默认充值1000元，并将active置为1，修改最新日期，增加钱，增加历史金额，level仍为0
@@ -47,5 +49,20 @@ public interface CardService {
      * @param points
      */
     public void exchangePoints(int id, double points);
+
+    /**
+     * 支付课程
+     * @param id
+     * @param price
+     */
+    public void pay(int id, double price);
+
+    /**
+     * 课程退款
+     * @param id
+     * @param price
+     */
+    public void refund(int id, double price);
+
 
 }

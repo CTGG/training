@@ -2,18 +2,20 @@ package com.college.service;
 
 import com.college.domain.Course;
 import com.college.util.ResultMessage;
+import org.springframework.stereotype.Component;
 
 /**
  * Created by G on 2017/3/11.
  */
+@Component
 public interface CourseService {
     /**
      * 0. 查看该课程的价格
      *
      * 如果金额不足则失败，直接返回
      * 如果金额充足：
-     * 1. 更新lastpay，扣除学生money，增加历史金额，看看level是否改变，active置为1
-     * 2. course表中增加一条记录，学生的成绩默认为0
+     * 1. 更新lastpay，扣除学生money，增加历史金额，看看level是否改变，active置为1  pay方法提供
+     * 2. course表中增加一条记录，学生的成绩默认为0   registerStudent提供
      *
      * @param id
      * @param courseid
@@ -23,7 +25,7 @@ public interface CourseService {
 
     /**
      *
-     * course表中增加一条记录，学生的成绩默认为0
+     * course表中增加一条记录，学生的成绩默认为0  registerStudent提供
      *
      * @param id
      * @param courseid
@@ -33,8 +35,8 @@ public interface CourseService {
     /**
      * 0. 查看该课程的价格
      *
-     * 1. 原数增加学生money，减少历史金额，看看level是否改变
-     * 2. course表中删去学生的课程记录
+     * 1. 原数增加学生money，减少历史金额，看看level是否改变  refund提供
+     * 2. course表中删去学生的课程记录 dropcourse提供
      * @param id
      * @param courseid
      */
@@ -43,7 +45,7 @@ public interface CourseService {
 
 
     /**
-     * course表中删去学生的课程记录
+     * course表中删去学生的课程记录：适用于中途退课以及现金退款
      * @param id
      * @param courseid
      */
@@ -51,7 +53,7 @@ public interface CourseService {
 
 
     /**
-     * 增加一个开班申请，默认未批准
+     * 增加一个开班申请，默认未批准，检查是否开始日期大于等于今天且结束>开始
      * @param course
      */
     public void applyAddCourse(Course course);

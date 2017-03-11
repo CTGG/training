@@ -89,6 +89,44 @@ public class CardServiceImpl implements CardService{
         save(card);
     }
 
+    @Override
+    public void pay(int id, double price) {
+        Card card = moneyChange(id, price);
+        card.setLastpay(TimeHelper.getCurrentDate());
+        card.setActive(true);
+        save(card);
+    }
+
+    @Override
+    public void refund(int id, double price) {
+        Card card = moneyChange(id, 0-price);
+        save(card);
+    }
+
+    private Card moneyChange(int id, double price){
+        Card card = getCard(id);
+        double money = card.getMoney();
+        money -= price;
+        card.setMoney(money);
+
+
+
+        double payhis = card.getPayhis();
+        payhis += price;
+
+        if (payhis < 0){
+            payhis = 0;
+        }
+
+        card.setPayhis(payhis);
+
+        double level = payhis / 10000;
+        card.setLevel((int) level);
+
+        return card;
+
+    }
+
     private Card save(Card card){
         return cardRepo.save(card);
     }
