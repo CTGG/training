@@ -1,6 +1,8 @@
 package com.college.repository;
 
 import com.college.domain.Users;
+import org.springframework.data.jpa.repository.Modifying;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 
 /**
@@ -11,4 +13,6 @@ public interface UsersRepo extends CrudRepository<Users,Long>{
 
     @Override
     Users save(Users users);
+
+
 }

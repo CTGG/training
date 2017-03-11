@@ -3,7 +3,6 @@ package com.college.service;
 import com.college.domain.Users;
 import com.college.repository.UsersRepo;
 import com.college.util.Type;
-import org.junit.jupiter.api.Test;
 
 import javax.annotation.Resource;
 
@@ -17,7 +16,7 @@ public class LoginServiceImpl implements LoginService{
     //tested
     @Override
     public boolean isValid(int id, String password) {
-        Users users = usersRepo.findById(id);
+        Users users = findById(id);
         if (users == null){
             return false;
         }else {
@@ -30,7 +29,7 @@ public class LoginServiceImpl implements LoginService{
 
     @Override
     public Type getUserType(int id) {
-        Users users = usersRepo.findById(id);
+        Users users = findById(id);
         return users.getType();
     }
 
@@ -41,11 +40,25 @@ public class LoginServiceImpl implements LoginService{
         users.setPassword(password);
         users.setCardid(cardid);
         users.setType(type);
-        Users newuser = usersRepo.save(users);
+        Users newuser = save(users);
         return newuser.getId();
     }
 
+    @Override
+    public void modifyInfo(int id, String newname, String newpassword, String newcardid) {
+        Users users = findById(id);
+        users.setName(newname);
+        users.setPassword(newpassword);
+        users.setCardid(newcardid);
+        save(users);
+    }
 
+    private Users findById(int id){
+        return usersRepo.findById(id);
+    }
 
+    private Users save(Users users){
+        return usersRepo.save(users);
+    }
 
 }

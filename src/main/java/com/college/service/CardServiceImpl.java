@@ -3,8 +3,11 @@ package com.college.service;
 import com.college.domain.Card;
 import com.college.repository.CardRepo;
 import com.college.util.TimeHelper;
+import org.joda.time.Days;
+import org.joda.time.LocalDate;
 
 import javax.annotation.Resource;
+import java.sql.Date;
 
 /**
  * Created by G on 2017/3/11.
@@ -22,32 +25,72 @@ public class CardServiceImpl implements CardService{
         card.setPayhis(1000);
         card.setLevel(0);
         card.setActive(true);
-        Card newcard = cardRepo.save(card);
+        Card newcard = save(card);
         return newcard.isActive();
     }
 
+
     @Override
     public void recharge(int id, double money) {
-        
+        Card card = getCard(id);
+        double balance = card.getMoney();
+        balance += money;
+        card.setMoney(balance);
+        save(card);
     }
 
     @Override
     public void cancelActive(int id) {
-
+        Card card = getCard(id);
+        card.setActive(false);
+        save(card);
     }
 
     @Override
-    public int checkActive(int id) {
-        return 0;
+    public boolean checkActive(int id) {
+        Card card = getCard(id);
+        return card.isActive();
     }
 
     @Override
     public Card getCard(int id) {
-        return null;
+        Card card = cardRepo.findById(id);
+        Date date1 = TimeHelper.getCurrentDate();
+        Date date2 = card.getLastpay();
+        int days = Days.daysBetween(LocalDate.fromDateFields(date1), LocalDate.fromDateFields(date2)).getDays();
+        if (days>365){
+            card.setActive(false);
+        }
+        save(card);
+        return card;
     }
 
     @Override
     public void exchangePoints(int id, double points) {
+        Card card = getCard(id);
+        double oldpoints = card.getPayhis()/100;
+        double oldmoney = card.getMoney();
+        //check whether member input too much points
+        double exchage = points;
+        if (points > oldpoints){
+            exchage = oldpoints;
+        }
+        //1. set new payhis by newpoints
+        double newpoints = oldpoints - exchage;
+        double newpayhis = newpoints * 100;
+        card.setPayhis(newpayhis);
+        //2. set new level by new payhis
+        double level = newpayhis / 10000;
+        card.setLevel((int) level);
 
+        //3. add money
+        double newmoney = oldmoney + exchage * 100;
+        card.setMoney(newmoney);
+        save(card);
     }
+
+    private Card save(Card card){
+        return cardRepo.save(card);
+    }
+
 }

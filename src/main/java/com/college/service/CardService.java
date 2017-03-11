@@ -15,7 +15,7 @@ public interface CardService {
 
 
     /**
-     * 充值，同上+查看level是否需要更改
+     * 充值，增加钱
      * @param id
      * @param money
      */
@@ -32,10 +32,10 @@ public interface CardService {
      * @param id
      * @return
      */
-    public int checkActive(int id);
+    public boolean checkActive(int id);
 
     /**
-     * 得到卡所有信息
+     * 得到卡所有信息，自动更新过active的并将更新后的存入数据库
      * @param id
      * @return
      */

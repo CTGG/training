@@ -39,5 +39,13 @@ public interface LoginService {
      */
     public int register(Type type, String name, String password, String cardid);
 
+    /**
+     * change user information
+     * @param newname  it can be new name
+     * @param newpassword it can be new password
+     * @param newcardid it can be new cardid
+     */
+    public void modifyInfo(int id, String newname, String newpassword, String newcardid);
+
 
 }
