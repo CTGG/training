@@ -1,17 +1,14 @@
-<!DOCTYPE html>
-<html lang="zh-CN"
-      xmlns="http://www.w3.org/1999/xhtml"
-      xmlns:th="http://www.thymeleaf.org"
-      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-      layout:decorator="webModel">
-
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
-    <title>测试首页</title>
+    <title>登录首页</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 </head>
 <body>
-<div th:fragment="content" th:remove="tag">
-    <h2>这里显示专属本页面的内容</h2>
-</div>
+<form action="#" th:action="@{/login}" th:object="${LoginMessage}" method="post">
+    <p>你的ID <input type="text" th:field="*{id}" /></p>
+    <p>密码 <input type="text" th:field="*{password}" /></p>
+    <p><input type="submit" value="Submit" /> <input type="reset" value="Reset" /></p>
+</form>
 </body>
 </html>

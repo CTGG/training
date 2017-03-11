@@ -1,8 +1,13 @@
 package com.college.service;
 
+import com.college.util.Type;
+import org.springframework.stereotype.Component;
+
 /**
  * Created by G on 2017/3/10.
  */
+
+@Component
 public interface LoginService {
     /**
      *
@@ -12,16 +17,27 @@ public interface LoginService {
      * @param password
      * @return boolean
      */
+
     public boolean isValid(int id, String password);
 
 
     /**
+     * type of user
+     * @param id
+     * @return
+     */
+    public Type getUserType(int id);
+
+
+    /**
+     *Addition: generate a id for this member
      *
      * @param name
      * @param password
-     * @return int
+     * @param cardid  id of bank card
+     * @return int     return the id of the user
      */
-    public int registerMember(String name, String password);
+    public int register(Type type, String name, String password, String cardid);
 
-    public int registerCollege();
+
 }

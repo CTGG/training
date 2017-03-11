@@ -13,12 +13,11 @@ import java.sql.Date;
 public class Card implements Serializable{
     @Id
     private int id;
-    @Column(nullable = false)
-    private int cardid;
     private Date lastpay;
     private double money;
     private double payhis;
     private int level;
+    private boolean active;
 
     public Card() {
     }
@@ -29,14 +28,6 @@ public class Card implements Serializable{
 
     public void setId(int id) {
         this.id = id;
-    }
-
-    public int getCardid() {
-        return cardid;
-    }
-
-    public void setCardid(int cardid) {
-        this.cardid = cardid;
     }
 
     public Date getLastpay() {
@@ -69,5 +60,13 @@ public class Card implements Serializable{
 
     public void setLevel(int level) {
         this.level = level;
+    }
+
+    public boolean isActive() {
+        return active;
+    }
+
+    public void setActive(boolean active) {
+        this.active = active;
     }
 }

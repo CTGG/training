@@ -11,7 +11,7 @@ import java.io.Serializable;
 @Entity (name = "users")
 public class Users implements Serializable{
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
     private String name;
@@ -19,7 +19,7 @@ public class Users implements Serializable{
     @Column(name = "type")
     @Enumerated(EnumType.STRING)
     private Type type;
-
+    private String cardid;
 
     public Users() {
     }
@@ -54,5 +54,13 @@ public class Users implements Serializable{
 
     public void setType(Type type) {
         this.type = type;
+    }
+
+    public String getCardid() {
+        return cardid;
+    }
+
+    public void setCardid(String cardid) {
+        this.cardid = cardid;
     }
 }
