@@ -31,7 +31,7 @@ public class ScoreServiceImpl implements ScoreService {
 
     @Override
     public void deleteCourseItem(int id, int courseid) {
-        Score score = scoreRepo.findByCompositeId(id, courseid);
+        Score score = scoreRepo.findByStudentidAndCourseid(id, courseid);
         scoreRepo.delete(score);
     }
 
@@ -49,7 +49,7 @@ public class ScoreServiceImpl implements ScoreService {
 
     @Override
     public List<Score> getMyScores(int id) {
-        List<Score> scores = scoreRepo.findByStuid(id);
+        List<Score> scores = scoreRepo.findByStudentid(id);
         return scores;
     }
 

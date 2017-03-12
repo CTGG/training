@@ -4,7 +4,6 @@ import com.college.domain.*;
 import com.college.repository.CourseRepo;
 import com.college.repository.ScoreRepo;
 import com.college.repository.SettleRepo;
-import com.college.repository.UsersRepo;
 import com.college.util.Grade;
 import com.college.util.Settlement;
 
@@ -136,7 +135,7 @@ public class ManagerServiceImpl implements ManagerService{
     @Override
     public Map<Integer, Double> getFinanceSum() {
         Map<Integer, Double> map = new HashMap<>();
-        List<SettleItem> items = settleRepo.getAllSettle();
+        List<SettleItem> items = settleRepo.findAll();
         List<Settlement> result = getSemtList(items);
         for (Settlement semt: result
              ) {

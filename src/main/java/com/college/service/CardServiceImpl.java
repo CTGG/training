@@ -1,6 +1,7 @@
 package com.college.service;
 
 import com.college.domain.Card;
+import com.college.domain.Log;
 import com.college.domain.SettleItem;
 import com.college.repository.CardRepo;
 import com.college.repository.LogRepo;
@@ -33,7 +34,8 @@ public class CardServiceImpl implements CardService{
         card.setLevel(0);
         card.setActive(true);
         Card newcard = save(card);
-        logRepo.save(id, "充值1000元激活会员卡", Type.MEMBER);
+        Log log = new Log(id, "充值1000元激活会员卡", Type.MEMBER);
+        logRepo.save(log);
         return newcard.isActive();
     }
 
@@ -45,7 +47,8 @@ public class CardServiceImpl implements CardService{
         balance += money;
         card.setMoney(balance);
         save(card);
-        logRepo.save(id, "充值"+money+"元", Type.MEMBER);
+        Log log = new Log(id, "充值"+money+"元", Type.MEMBER);
+        logRepo.save(log);
     }
 
     @Override
@@ -53,7 +56,8 @@ public class CardServiceImpl implements CardService{
         Card card = getCard(id);
         card.setActive(false);
         save(card);
-        logRepo.save(id, "取消会员资格", Type.MEMBER);
+        Log log = new Log(id, "取消会员资格", Type.MEMBER);
+        logRepo.save(log);
     }
 
     @Override
@@ -98,7 +102,8 @@ public class CardServiceImpl implements CardService{
         card.setMoney(newmoney);
         save(card);
 
-        logRepo.save(id, "兑换"+exchage+"积分", Type.MEMBER);
+        Log log = new Log(id, "兑换"+exchage+"积分", Type.MEMBER);
+        logRepo.save(log);
     }
 
     @Override

@@ -1,9 +1,6 @@
 package com.college.service;
 
-import com.college.domain.Card;
-import com.college.domain.Course;
-import com.college.domain.Score;
-import com.college.domain.SettleItem;
+import com.college.domain.*;
 import com.college.repository.CourseRepo;
 import com.college.repository.LogRepo;
 import com.college.repository.SettleRepo;
@@ -16,6 +13,7 @@ import javax.annotation.Resource;
 import java.sql.Date;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 /**
  * Created by G on 2017/3/11.
@@ -48,14 +46,17 @@ public class CourseServiceImpl implements CourseService{
         int level = temp.getLevel();
         price -= level * 0.1 * price;
 
-        logRepo.save(id, "预定课程"+course.getName(), Type.MEMBER);
+        Log log = new Log(id, "预定课程"+course.getName(), Type.MEMBER);
+        logRepo.save(log);
 
 
 
         cardService.pay(id, price);
 
-        logRepo.save(id, "支付"+price+"元", Type.MEMBER);
-        logRepo.save(course.getCollegeid(), course.getName()+"被学生"+id+"订购，收入"+price+"元", Type.COLLEGE);
+        Log log1 = new Log(id, "支付"+price+"元", Type.MEMBER);
+        logRepo.save(log1);
+        Log log2 = new Log(course.getCollegeid(), course.getName()+"被学生"+id+"订购，收入"+price+"元", Type.COLLEGE);
+        logRepo.save(log2);
 
         //存入会员卡支付内容，便于结算以及退款
         SettleItem settleItem = new SettleItem();
@@ -74,23 +75,33 @@ public class CourseServiceImpl implements CourseService{
     public void orderCourseByCash(int id, int courseid) {
         Course course = getCourse(courseid);
         double price = course.getPrice();
-        logRepo.save(id, "订购课程"+course.getName()+"，支付现金"+price+"元", Type.MEMBER);
-        logRepo.save(course.getCollegeid(), course.getName()+"被学生"+id+"订购，收取现金"+price+"元", Type.COLLEGE);
+        Log log = new Log(id, "订购课程"+course.getName()+"，支付现金"+price+"元", Type.MEMBER);
+        logRepo.save(log);
+        Log log1 = new Log(course.getCollegeid(), course.getName()+"被学生"+id+"订购，收取现金"+price+"元", Type.COLLEGE);
+        logRepo.save(log1);
         scoreService.registerStudent(id, courseid);
     }
 
     @Override
     public void cancelOrder(int id, int courseid) {
         Course course = getCourse(courseid);
-        logRepo.save(id, "取消预定课程"+course.getName(), Type.MEMBER);
+        Log log = new Log(id, "取消预定课程"+course.getName(), Type.MEMBER);
+        logRepo.save(log);
         //从settleitem中得到price，并将它删除
-        SettleItem item = settleRepo.fingByKey(id, courseid);
+
+        
+        SettleItemId sid = new SettleItemId();
+        sid.setCourseid(courseid);
+        sid.setStudentid(id);
+        SettleItem item = settleRepo.findOne(sid);
 
         double price = item.getMoney();
         cardService.refund(id, price);
 
-        logRepo.save(id, "收到退款"+price+"元", Type.MEMBER);
-        logRepo.save(course.getCollegeid(), course.getName()+"被学生"+id+"退订，支出"+price+"元", Type.COLLEGE);
+        Log log1 = new Log(id, "收到退款"+price+"元", Type.MEMBER);
+        logRepo.save(log1);
+        Log log2 = new Log(course.getCollegeid(), course.getName()+"被学生"+id+"退订，支出"+price+"元", Type.COLLEGE);
+        logRepo.save(log2);
         scoreService.deleteCourseItem(id, courseid);
 
         settleRepo.delete(item);
@@ -99,8 +110,10 @@ public class CourseServiceImpl implements CourseService{
     @Override
     public void dropCourse(int id, int courseid) {
         Course course = getCourse(courseid);
-        logRepo.save(id, "退出课程"+course.getName(), Type.MEMBER);
-        logRepo.save(course.getCollegeid(), "学生"+id+"退出课程"+course.getName(), Type.COLLEGE);
+        Log log = new Log(id, "退出课程"+course.getName(), Type.MEMBER);
+        logRepo.save(log);
+        Log log1 = new Log(course.getCollegeid(), "学生"+id+"退出课程"+course.getName(), Type.COLLEGE);
+        logRepo.save(log1);
         scoreService.deleteCourseItem(id, courseid);
     }
 

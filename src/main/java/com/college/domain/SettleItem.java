@@ -1,21 +1,34 @@
 package com.college.domain;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.IdClass;
 import java.io.Serializable;
 
 /**
  * Created by G on 2017/3/12.
  */
 @Entity(name = "settleitem")
+@IdClass(SettleItemId.class)
 public class SettleItem implements Serializable{
     @Id
+    @Column(name = "studentid")
     private int studentid;
+
+    @Column(name = "collegeid")
     private int collegeid;
+
     @Id
+    @Column(name = "courseid")
     private int courseid;
+
+    @Column(name = "money")
     private double money;
+
+    @Column(name = "counted")
     private boolean counted;
+
 
     public SettleItem(int studentid, int collegeid, int courseid, double money) {
         this.studentid = studentid;

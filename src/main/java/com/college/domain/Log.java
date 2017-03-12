@@ -2,26 +2,36 @@ package com.college.domain;
 
 import com.college.util.Type;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.IdClass;
 import java.io.Serializable;
 import java.sql.Timestamp;
 
 /**
- * Created by G on 2017/3/10.
+ * Created by G on 2017/3/13.
  */
 @Entity(name = "log")
-public class Log implements Serializable{
+@IdClass(LogId.class)
+public class Log implements Serializable {
+
     @Id
+    @Column(name = "id")
     private int id;
-    @Id
-    private Timestamp opetime;
-
     private String operation;
-
+    @Id
+    @Column(name = "opetime")
+    private Timestamp opetime;
     private Type type;
 
     public Log() {
+    }
+
+    public Log(int id, String operation, Type type) {
+        this.id = id;
+        this.operation = operation;
+        this.type = type;
     }
 
     public int getId() {
@@ -32,20 +42,20 @@ public class Log implements Serializable{
         this.id = id;
     }
 
-    public Timestamp getOpetime() {
-        return opetime;
-    }
-
-    public void setOpetime(Timestamp opetime) {
-        this.opetime = opetime;
-    }
-
     public String getOperation() {
         return operation;
     }
 
     public void setOperation(String operation) {
         this.operation = operation;
+    }
+
+    public Timestamp getOpetime() {
+        return opetime;
+    }
+
+    public void setOpetime(Timestamp opetime) {
+        this.opetime = opetime;
     }
 
     public Type getType() {
@@ -56,3 +66,5 @@ public class Log implements Serializable{
         this.type = type;
     }
 }
+
+
