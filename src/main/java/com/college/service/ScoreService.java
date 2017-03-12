@@ -1,6 +1,9 @@
 package com.college.service;
 
+import com.college.domain.Score;
 import org.springframework.stereotype.Component;
+
+import java.util.List;
 
 /**
  * Created by G on 2017/3/11.
@@ -32,5 +35,11 @@ public interface ScoreService {
     public void scoreRegister(int courseid, int studentid, int score);
 
 
+    /**
+     * 得到一个学生所有的分数
+     * @param id
+     * @return
+     */
+    public List<Score> getMyScores(int id);
 
 }

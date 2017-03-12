@@ -14,5 +14,7 @@ public interface ScoreRepo extends CrudRepository<Score,Long> {
 
     public Score findByCompositeId(int id, int courseid);
 
+    public List<Score> findByStuid(int studentid);
+
     public List<Score> findAll();
 }

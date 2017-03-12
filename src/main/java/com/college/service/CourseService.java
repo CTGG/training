@@ -4,6 +4,8 @@ import com.college.domain.Course;
 import com.college.util.ResultMessage;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
+
 /**
  * Created by G on 2017/3/11.
  */
@@ -67,6 +69,35 @@ public interface CourseService {
      */
     public ResultMessage modifyInfo(Course course);
 
+
+    /**
+     * 得到一个学生可以参与的课程，
+     * 即所有获批准的课程-已结束的课程-已参与的课程
+     * @param id
+     * @return
+     */
+    public List<Course> getAvailableCourses(int id);
+
+    /**
+     * 得到一个学生参与的所有课程
+     * @param id
+     * @return
+     */
+    public List<Course> getMyCourse(int id);
+
+    /**
+     *
+     * @param courseid
+     * @return
+     */
+    public Course getCourseById(int courseid);
+
+    /**
+     * 得到一个机构的课程，包括申请中的和申请通过的
+     * @param collegeid
+     * @return
+     */
+    public List<Course> getMyApplications(int collegeid);
 
 
 

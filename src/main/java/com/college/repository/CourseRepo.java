@@ -16,4 +16,7 @@ public interface CourseRepo extends CrudRepository<Course,Long> {
     //TODO
     @Query(value = "select c from com.college.domain.Course c where c.valid = false", nativeQuery=true)
     List<Course> getNoValidCourse();
+
+
+    List<Course> findByCollegeid(int collegeid);
 }

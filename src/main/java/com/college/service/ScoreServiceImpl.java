@@ -1,13 +1,14 @@
 package com.college.service;
 
-import com.college.domain.Course;
+
 import com.college.domain.Score;
 import com.college.repository.CourseRepo;
 import com.college.repository.LogRepo;
 import com.college.repository.ScoreRepo;
-import com.college.util.Type;
+
 
 import javax.annotation.Resource;
+import java.util.List;
 
 /**
  * Created by G on 2017/3/11.
@@ -44,6 +45,12 @@ public class ScoreServiceImpl implements ScoreService {
         save(item);
 //        Course course = courseRepo.findById(courseid);
 //        logRepo.save(studentid, "课程"+course.getName()+"得分", Type.MEMBER);
+    }
+
+    @Override
+    public List<Score> getMyScores(int id) {
+        List<Score> scores = scoreRepo.findByStuid(id);
+        return scores;
     }
 
     private Score save(Score score){

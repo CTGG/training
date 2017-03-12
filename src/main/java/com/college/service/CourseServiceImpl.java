@@ -14,6 +14,8 @@ import com.college.util.Type;
 
 import javax.annotation.Resource;
 import java.sql.Date;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by G on 2017/3/11.
@@ -140,6 +142,52 @@ public class CourseServiceImpl implements CourseService{
         }
     }
 
+    @Override
+    public List<Course> getAvailableCourses(int id) {
+        //TODO whether cast works well
+        List<Course> courses = (List<Course>) courseRepo.findAll();
+        List<Score> scores = scoreService.getMyScores(id);
+        List<Integer> alreadyids = new ArrayList<>();
+        for (Score s:scores
+             ) {
+            alreadyids.add(s.getCourseid());
+        }
+
+        for (Course course:courses
+             ) {
+            Date enddate = course.getEnddate();
+            Date nowdate = TimeHelper.getCurrentDate();
+            //TODO int & integer
+            int courseid = course.getId();
+            if (enddate.before(nowdate) || alreadyids.contains(courseid)){
+                courses.remove(course);
+            }
+        }
+        return courses;
+    }
+
+    @Override
+    public List<Course> getMyCourse(int id) {
+        List<Score> scores = scoreService.getMyScores(id);
+        List<Course> courses = new ArrayList<>();
+        for (Score s: scores
+             ) {
+            int courseid = s.getCourseid();
+            Course course = getCourseById(courseid);
+            courses.add(course);
+        }
+        return courses;
+    }
+
+    @Override
+    public Course getCourseById(int courseid) {
+        return courseRepo.findById(courseid);
+    }
+
+    @Override
+    public List<Course> getMyApplications(int collegeid) {
+        return courseRepo.findByCollegeid(collegeid);
+    }
 
 
     private Course getCourse(int courseid){
