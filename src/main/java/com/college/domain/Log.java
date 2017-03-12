@@ -11,17 +11,17 @@ import java.sql.Timestamp;
  * Created by G on 2017/3/10.
  */
 @Entity(name = "log")
-public class log implements Serializable{
+public class Log implements Serializable{
     @Id
     private int id;
     @Id
-    private Timestamp timestamp;
+    private Timestamp opetime;
 
     private String operation;
 
     private Type type;
 
-    public log() {
+    public Log() {
     }
 
     public int getId() {
@@ -32,12 +32,12 @@ public class log implements Serializable{
         this.id = id;
     }
 
-    public Timestamp getTimestamp() {
-        return timestamp;
+    public Timestamp getOpetime() {
+        return opetime;
     }
 
-    public void setTimestamp(Timestamp timestamp) {
-        this.timestamp = timestamp;
+    public void setOpetime(Timestamp opetime) {
+        this.opetime = opetime;
     }
 
     public String getOperation() {

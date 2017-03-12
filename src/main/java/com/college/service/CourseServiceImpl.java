@@ -3,10 +3,14 @@ package com.college.service;
 import com.college.domain.Card;
 import com.college.domain.Course;
 import com.college.domain.Score;
+import com.college.domain.SettleItem;
 import com.college.repository.CourseRepo;
+import com.college.repository.LogRepo;
+import com.college.repository.SettleRepo;
 import com.college.util.ResultMessage;
 import com.college.util.ResultType;
 import com.college.util.TimeHelper;
+import com.college.util.Type;
 
 import javax.annotation.Resource;
 import java.sql.Date;
@@ -21,6 +25,10 @@ public class CourseServiceImpl implements CourseService{
     CardService cardService;
     @Resource
     ScoreService scoreService;
+    @Resource
+    LogRepo logRepo;
+    @Resource
+    SettleRepo settleRepo;
 
     @Override
     public ResultMessage orderCourse(int id, int courseid) {
@@ -33,7 +41,28 @@ public class CourseServiceImpl implements CourseService{
             return new ResultMessage(ResultType.FAIL,"余额不足，请充值");
         }
 
+        //得到折扣后的价格
+        Card temp = cardService.getCard(id);
+        int level = temp.getLevel();
+        price -= level * 0.1 * price;
+
+        logRepo.save(id, "预定课程"+course.getName(), Type.MEMBER);
+
+
+
         cardService.pay(id, price);
+
+        logRepo.save(id, "支付"+price+"元", Type.MEMBER);
+        logRepo.save(course.getCollegeid(), course.getName()+"被学生"+id+"订购，收入"+price+"元", Type.COLLEGE);
+
+        //存入会员卡支付内容，便于结算以及退款
+        SettleItem settleItem = new SettleItem();
+        settleItem.setStudentid(id);
+        settleItem.setCollegeid(course.getCollegeid());
+        settleItem.setCourseid(courseid);
+        settleItem.setMoney(price);
+        settleItem.setCounted(false);
+        settleRepo.save(settleItem);
 
         scoreService.registerStudent(id, courseid);
         return new ResultMessage(ResultType.SUCCESS, "订购课程成功");
@@ -41,20 +70,35 @@ public class CourseServiceImpl implements CourseService{
 
     @Override
     public void orderCourseByCash(int id, int courseid) {
+        Course course = getCourse(courseid);
+        double price = course.getPrice();
+        logRepo.save(id, "订购课程"+course.getName()+"，支付现金"+price+"元", Type.MEMBER);
+        logRepo.save(course.getCollegeid(), course.getName()+"被学生"+id+"订购，收取现金"+price+"元", Type.COLLEGE);
         scoreService.registerStudent(id, courseid);
     }
 
     @Override
     public void cancelOrder(int id, int courseid) {
         Course course = getCourse(courseid);
-        double price = course.getPrice();
+        logRepo.save(id, "取消预定课程"+course.getName(), Type.MEMBER);
+        //从settleitem中得到price，并将它删除
+        SettleItem item = settleRepo.fingByKey(id, courseid);
+
+        double price = item.getMoney();
         cardService.refund(id, price);
 
-        dropCourse(id, courseid);
+        logRepo.save(id, "收到退款"+price+"元", Type.MEMBER);
+        logRepo.save(course.getCollegeid(), course.getName()+"被学生"+id+"退订，支出"+price+"元", Type.COLLEGE);
+        scoreService.deleteCourseItem(id, courseid);
+
+        settleRepo.delete(item);
     }
 
     @Override
     public void dropCourse(int id, int courseid) {
+        Course course = getCourse(courseid);
+        logRepo.save(id, "退出课程"+course.getName(), Type.MEMBER);
+        logRepo.save(course.getCollegeid(), "学生"+id+"退出课程"+course.getName(), Type.COLLEGE);
         scoreService.deleteCourseItem(id, courseid);
     }
 

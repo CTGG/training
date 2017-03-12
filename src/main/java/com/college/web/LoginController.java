@@ -39,7 +39,6 @@ public class LoginController {
 
     @RequestMapping(value = "/login", method = RequestMethod.POST)
     public String loginCheck(@ModelAttribute LoginMessage loginMessage, ModelMap map) {
-        //TODO test getid&getpassword
         int id = loginMessage.getId();
         String password = loginMessage.getPassword();
         boolean valid = loginService.isValid(id, password);

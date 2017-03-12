@@ -1,8 +1,12 @@
 package com.college.service;
 
 import com.college.domain.Card;
+import com.college.domain.SettleItem;
 import com.college.repository.CardRepo;
+import com.college.repository.LogRepo;
+import com.college.repository.SettleRepo;
 import com.college.util.TimeHelper;
+import com.college.util.Type;
 import org.joda.time.Days;
 import org.joda.time.LocalDate;
 
@@ -15,6 +19,9 @@ import java.sql.Date;
 public class CardServiceImpl implements CardService{
     @Resource
     CardRepo cardRepo;
+    @Resource
+    LogRepo logRepo;
+
 
     @Override
     public boolean activate(int id) {
@@ -26,6 +33,7 @@ public class CardServiceImpl implements CardService{
         card.setLevel(0);
         card.setActive(true);
         Card newcard = save(card);
+        logRepo.save(id, "充值1000元激活会员卡", Type.MEMBER);
         return newcard.isActive();
     }
 
@@ -37,6 +45,7 @@ public class CardServiceImpl implements CardService{
         balance += money;
         card.setMoney(balance);
         save(card);
+        logRepo.save(id, "充值"+money+"元", Type.MEMBER);
     }
 
     @Override
@@ -44,6 +53,7 @@ public class CardServiceImpl implements CardService{
         Card card = getCard(id);
         card.setActive(false);
         save(card);
+        logRepo.save(id, "取消会员资格", Type.MEMBER);
     }
 
     @Override
@@ -87,6 +97,8 @@ public class CardServiceImpl implements CardService{
         double newmoney = oldmoney + exchage * 100;
         card.setMoney(newmoney);
         save(card);
+
+        logRepo.save(id, "兑换"+exchage+"积分", Type.MEMBER);
     }
 
     @Override
@@ -121,13 +133,14 @@ public class CardServiceImpl implements CardService{
         card.setPayhis(payhis);
 
         double level = payhis / 10000;
+        if (level>6) level = 6;
         card.setLevel((int) level);
 
         return card;
 
     }
 
-    private Card save(Card card){
+    public Card save(Card card){
         return cardRepo.save(card);
     }
 

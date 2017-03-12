@@ -65,4 +65,12 @@ public interface CardService {
     public void refund(int id, double price);
 
 
+    /**
+     * 更新card
+     * @param card
+     * @return
+     */
+    public Card save(Card card);
+
+
 }

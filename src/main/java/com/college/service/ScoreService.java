@@ -31,4 +31,6 @@ public interface ScoreService {
      */
     public void scoreRegister(int courseid, int studentid, int score);
 
+
+
 }
